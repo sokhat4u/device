@@ -1,31 +1,263 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>Pollfish Generator</title>
+  <title>Pollfish Pro Generator</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
   <style>
-    body { font-family: Arial, sans-serif; padding: 20px; }
-    input, button { margin: 5px; padding: 5px; }
+    :root {
+      --primary: #6c5ce7;
+      --secondary: #a29bfe;
+      --dark: #2d3436;
+      --light: #f5f6fa;
+      --glass: rgba(255, 255, 255, 0.1);
+      --shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
+    }
+    
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: 'Poppins', sans-serif;
+      -webkit-tap-highlight-color: transparent;
+    }
+    
+    body {
+      background: linear-gradient(135deg, #2d3436 0%, #000000 100%);
+      min-height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      padding: 15px;
+      color: var(--light);
+      font-size: clamp(14px, 3vw, 16px);
+    }
+    
+    .glass-card {
+      background: var(--glass);
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
+      border-radius: 15px;
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      padding: 20px;
+      width: 100%;
+      max-width: 500px;
+      box-shadow: var(--shadow);
+      animation: fadeIn 0.8s ease-in-out;
+    }
+    
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    
+    h2 {
+      text-align: center;
+      margin-bottom: 20px;
+      font-size: clamp(20px, 6vw, 28px);
+      background: linear-gradient(to right, #a29bfe, #6c5ce7);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      text-shadow: 0 2px 10px rgba(108, 92, 231, 0.3);
+    }
+    
+    .input-group {
+      margin-bottom: 15px;
+    }
+    
+    label {
+      display: block;
+      margin-bottom: 6px;
+      font-weight: 500;
+      color: var(--secondary);
+      font-size: clamp(14px, 4vw, 16px);
+    }
+    
+    input {
+      width: 100%;
+      padding: 12px 15px;
+      border: none;
+      border-radius: 10px;
+      background: rgba(0, 0, 0, 0.3);
+      color: white;
+      font-size: clamp(14px, 4vw, 16px);
+      transition: all 0.3s;
+      box-shadow: inset 2px 2px 5px rgba(0, 0, 0, 0.3),
+                  inset -2px -2px 5px rgba(255, 255, 255, 0.05);
+    }
+    
+    input:focus {
+      outline: none;
+      box-shadow: inset 2px 2px 5px rgba(0, 0, 0, 0.3),
+                  inset -2px -2px 5px rgba(255, 255, 255, 0.05),
+                  0 0 0 2px var(--primary);
+    }
+    
+    .btn-group {
+      display: flex;
+      gap: 10px;
+      margin: 20px 0;
+      flex-wrap: wrap;
+    }
+    
+    button {
+      flex: 1;
+      min-width: 120px;
+      padding: 12px;
+      border: none;
+      border-radius: 10px;
+      font-weight: 600;
+      font-size: clamp(14px, 4vw, 16px);
+      cursor: pointer;
+      transition: all 0.3s;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+    }
+    
+    .btn-generate {
+      background: linear-gradient(135deg, var(--primary), var(--secondary));
+      color: white;
+      box-shadow: 0 4px 15px rgba(108, 92, 231, 0.4);
+    }
+    
+    .btn-generate:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 6px 20px rgba(108, 92, 231, 0.6);
+    }
+    
+    .btn-open {
+      background: rgba(255, 255, 255, 0.1);
+      color: var(--light);
+      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+    }
+    
+    .btn-open:hover {
+      background: rgba(255, 255, 255, 0.2);
+      transform: translateY(-3px);
+    }
+    
+    #linkList {
+      margin-top: 20px;
+      max-height: 200px;
+      overflow-y: auto;
+      padding-right: 5px;
+    }
+    
+    #linkList::-webkit-scrollbar {
+      width: 4px;
+    }
+    
+    #linkList::-webkit-scrollbar-thumb {
+      background: var(--primary);
+      border-radius: 10px;
+    }
+    
+    #linkList li {
+      background: rgba(0, 0, 0, 0.3);
+      padding: 10px 12px;
+      border-radius: 8px;
+      margin-bottom: 8px;
+      display: flex;
+      align-items: center;
+      transition: all 0.3s;
+      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    }
+    
+    #linkList li:hover {
+      background: rgba(108, 92, 231, 0.2);
+      transform: translateX(5px);
+    }
+    
+    #linkList a {
+      color: var(--light);
+      text-decoration: none;
+      flex: 1;
+      font-size: clamp(13px, 3.5vw, 15px);
+      word-break: break-all;
+    }
+    
+    #linkList a:hover {
+      color: var(--secondary);
+      text-decoration: underline;
+    }
+    
+    .icon {
+      font-size: clamp(16px, 5vw, 20px);
+    }
+    
+    /* Glow Effect */
+    .glow {
+      animation: glow 2s infinite alternate;
+    }
+    
+    @keyframes glow {
+      from {
+        box-shadow: 0 0 5px rgba(108, 92, 231, 0.5);
+      }
+      to {
+        box-shadow: 0 0 20px rgba(108, 92, 231, 0.8);
+      }
+    }
+    
+    /* Mobile-specific adjustments */
+    @media (max-width: 480px) {
+      body {
+        padding: 10px;
+      }
+      
+      .glass-card {
+        padding: 15px;
+      }
+      
+      .btn-group {
+        flex-direction: column;
+        gap: 8px;
+      }
+      
+      button {
+        width: 100%;
+      }
+    }
   </style>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
 </head>
 <body>
-  <h2>Pollfish Device Link Generator</h2>
-
-  <label>Device ID Prefix: </label>
-  <input type="text" id="prefix" value="ZEEAND"><br>
-
-  <label>Start Number: </label>
-  <input type="number" id="start" value="51"><br>
-
-  <label>End Number: </label>
-  <input type="number" id="end" value="60"><br>
-
-  <label>IP Address: </label>
-  <input type="text" id="ip" value="14.1.64.91"><br>
-
-  <button onclick="generateLinks()">Generate Links</button>
-  <button onclick="openAllTabs()">🚀 Open All Tabs</button>
-
-  <ul id="linkList"></ul>
+  <div class="glass-card glow">
+    <h2><i class="fas fa-link"></i> Pollfish Pro Generator</h2>
+    
+    <div class="input-group">
+      <label for="prefix"><i class="fas fa-id-card"></i> Device ID Prefix</label>
+      <input type="text" id="prefix" placeholder="e.g., DEV">
+    </div>
+    
+    <div class="input-group">
+      <label for="start"><i class="fas fa-play"></i> Start Number</label>
+      <input type="number" id="start" value="1">
+    </div>
+    
+    <div class="input-group">
+      <label for="end"><i class="fas fa-stop"></i> End Number</label>
+      <input type="number" id="end" value="20">
+    </div>
+    
+    <div class="input-group">
+      <label for="ip"><i class="fas fa-network-wired"></i> IP Address</label>
+      <input type="text" id="ip" value="14.1.64.91">
+    </div>
+    
+    <div class="btn-group">
+      <button class="btn-generate" onclick="generateLinks()">
+        <i class="fas fa-bolt"></i> Generate Links
+      </button>
+      <button class="btn-open" onclick="openAllTabs()">
+        <i class="fas fa-rocket"></i> Open All Tabs
+      </button>
+    </div>
+    
+    <ul id="linkList"></ul>
+  </div>
 
   <script>
     let links = [];
@@ -81,7 +313,7 @@
         let li = document.createElement("li");
         let a = document.createElement("a");
         a.href = url;
-        a.textContent = "Open for " + deviceId;
+        a.textContent = `🔗 Open for ${deviceId}`;
         a.target = "_blank";
         li.appendChild(a);
         list.appendChild(li);
@@ -89,6 +321,11 @@
     }
 
     function openAllTabs() {
+      if (links.length === 0) {
+        alert("Pehle links generate karo bhai!");
+        return;
+      }
+      
       for (let i = 0; i < links.length; i++) {
         window.open(links[i], '_blank');
       }
